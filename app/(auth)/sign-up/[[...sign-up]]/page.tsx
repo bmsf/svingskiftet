@@ -1,9 +1,9 @@
-import { SignUpButton } from '@clerk/nextjs';
+import { SignUp, SignUpButton } from '@clerk/nextjs';
 
 export default function Page() {
 	return (
 		<div>
-			<SignUpButton />
+			<SignUp />
 		</div>
 	);
 }

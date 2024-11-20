@@ -11,13 +11,23 @@ import {
 	NavbarMenu,
 	NavbarMenuItem,
 } from '@nextui-org/react';
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
 	const menuItems = ['Oppdag', 'Bli en Selger', 'Om Oss'];
 
+	const { isSignedIn, user, isLoaded } = useUser();
+
+	if (!isLoaded) {
+		return <p>Loading...</p>;
+	}
+
+	if (user != null) console.log(user);
+
+	// const { userId } = Auth();
 	// const menuItems = [
 	// 	'Profile',
 	// 	'Dashboard',
@@ -39,7 +49,9 @@ export default function Header() {
 					className='sm:block md:hidden'
 				/>
 				<NavbarBrand>
-					<p className='font-bold text-inherit'>ACME</p>
+					<Link href='/' className='font-bold text-inherit'>
+						ACME
+					</Link>
 				</NavbarBrand>
 			</NavbarContent>
 
@@ -66,16 +78,26 @@ export default function Header() {
 				</NavbarItem>
 			</NavbarContent>
 			<NavbarContent justify='end'>
-				<NavbarItem className='flex'>
-					<Button color='secondary' href='#' variant='bordered'>
-						<SignInButton>Logg inn</SignInButton>
-					</Button>
-				</NavbarItem>
-				<NavbarItem>
-					<Button as={Link} color='secondary' href='#' variant='shadow'>
-						<SignUpButton>Registrer deg</SignUpButton>
-					</Button>
-				</NavbarItem>
+				
+
+				{!isSignedIn ? (
+					<>
+						<NavbarItem className='flex'>
+							<Button color='secondary' variant='bordered'>
+								<SignInButton>Logg inn</SignInButton>
+							</Button>
+						</NavbarItem>
+						<NavbarItem>
+							<Button as={Link} color='secondary' variant='shadow'>
+								<SignUpButton>Registrer deg</SignUpButton>
+							</Button>
+						</NavbarItem>
+					</>
+				) : (
+					<NavbarItem>
+						<UserButton />
+					</NavbarItem>
+				)}
 			</NavbarContent>
 			<NavbarMenu>
 				{menuItems.map((item, index) => (
